@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="myMapper.Test_Mapper">
+
+
+	<select id="select_user" parameterType="Map" resultType="myEntity.T_MALL_USER">
+		select *
+		from t_mall_user
+	</select>
+
+	<select id="select_fenlei1" resultType="myEntity.T_MALL_FENLEI1">
+		select * from
+		t_mall_fenlei1
+	</select>
+
+	<select id="select_fenlei2" resultType="myEntity.T_MALL_FENLEI2">
+		select * from
+		t_mall_fenlei2
+	</select>
+
+
+</mapper>
+
+
+
+

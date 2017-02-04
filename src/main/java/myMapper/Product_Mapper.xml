@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="myMapper.Product_Mapper">
+
+	<select id="select_fenlei2" parameterType="Map" resultMap="fenlei2Map">
+		select
+		a.id as attrid,
+		a.attribute,
+		a.flag as attrflag,
+		a.fenlei2_id,
+		a.create_time as attrtime,
+		b.id as valueid,
+		b.value,
+		b.flag as valueflag,
+		b.attr_id,
+		b.value_name,
+		b.create_time as valuetime
+		from t_mall_attr a
+		left join t_mall_value b
+		on a.id = b.attr_id
+		where a.fenlei2_id =
+		#{fenlei2id}
+	</select>
+
+	<select id="select_products" parameterType="Map"
+		resultType="myEntity.T_MALL_PRODUCT">
+		select * from T_MALL_PRODUCT
+		where oneid=#{oneid}
+		and
+		twoid=#{twoid}
+		and tmid=#{tmid}
+	</select>
+
+	<resultMap type="myEntity.T_MALL_ATTR" id="fenlei2Map">
+		<result property="id" column="attrid" />
+		<result property="attribute" column="attribute" />
+		<result property="flag" column="attrflag" />
+		<result property="fenlei2_id" column="fenlei2_id" />
+		<result property="create_time" column="attrtime" />
+		<collection property="lvalue" ofType="myEntity.T_MALL_VALUE">
+			<result property="id" column="valueid" />
+			<result property="flag" column="valueflag" />
+			<result property="attr_id" column="attr_id" />
+			<result property="value" column="value" />
+			<result property="value_name" column="value_name" />
+			<result property="create_time" column="valuetime" />
+		</collection>
+	</resultMap>
+
+	<insert id="insert_attr" parameterType="myEntity.T_MALL_ATTR"
+		useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		insert into
+		t_mall_attr(attribute,fenlei2_id)
+		values(#{attribute},#{fenlei2_id})
+	</insert>
+
+	<insert id="insert_values" parameterType="List">
+		insert into t_mall_value(value,attr_id,value_name)
+		<foreach collection="list" item="values" separator="union">
+			select
+			#{values.value},#{values.attr_id},#{values.value_name}
+		</foreach>
+	</insert>
+
+	<insert id="insert_product" keyColumn="id" keyProperty="id"
+		useGeneratedKeys="true" parameterType="myEntity.T_MALL_PRODUCT">
+		insert into
+		T_MALL_PRODUCT(pname,oneid,twoid,tmid,pimage)
+		values(#{pname},#{oneid},#{twoid},#{tmid},#{pimage})
+	</insert>
+
+	<insert id="insert_image" parameterType="Map">
+		insert into t_mall_image(product_id,url)
+		<foreach collection="urls" item="url" separator="union">
+			select
+			#{product_id},
+			#{url}
+		</foreach>
+	</insert>
+
+	<insert id="insert_attr_value" parameterType="List">
+		insert into t_mall_attr_value(attr_id,value_id,product_id,sku_id)
+		<foreach collection="list" item="av" separator="union">
+			select
+			#{av.attr_id},
+			#{av.value_id},
+			#{av.product_id},
+			#{av.sku_id}
+		</foreach>
+	</insert>
+
+	<insert id="insert_sku" parameterType="myEntity.T_MALL_SKU"
+		useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		insert into
+		t_mall_sku(product_id,kucun,price,sku_name)
+		values(#{product_id},#{kucun},#{price},#{sku_name})
+	</insert>
+
+</mapper>
+
+
+
+
